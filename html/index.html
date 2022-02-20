@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <title>POSシステム</title>
+        <link rel="stylesheet" href="./style.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <!-- 0. ページが開いたら商品マスタを登録し、オーダークラスをインスタンス化する -->
+        <h2 class="alert alert-primary" role="alert">POSシステム</h2>
+        <div>
+            <!-- 1. CSVファイルからマスターデータを読み込む -->
+            <h3>CSVファイルからマスタデータを読み込み</h3>
+            CSVファイル:<input id="input_csv" type="text" value="item_master.csv"><button id="read_master">決定</button>
+        </div>
+
+        <div>
+            <h3>オーダー入力フォーム</h3>
+            商品コード<input id="item_code" type="text" placeholder="ex: 001"><br>
+            個数<input id="item_quantity" type="text" placeholder="ex: 1">個<br>
+            <!-- 2. オーダー登録ボタン -->
+            <button id="add_cart">カートに追加</button><br>
+            <!-- 3. オーダー確定ボタン -->
+            <button id="confirm_order">注文を確定する</button>
+        </div>
+        <div>
+            <h3>注文受付状況</h3>
+            <textarea id="order_field" cols="40" rows="5"></textarea>
+        </div>
+        <div>
+            <h3>お支払い金額計算</h3>
+            <textarea id="result_field" cols="40" rows="5"></textarea>
+        </div>
+        
+        <div>
+            <!-- 4. 受け取り金額の入力 -->
+            <h3>お預かり金額</h3><input id="deposit_amount" type="text" placeholder="1000"><br>
+            <button id="settlement">決済</button>
+        </div>
+
+        <div>
+            <h3>お釣りの表示</h3>
+            <textarea id="oturi_field" cols="40" rows="5"></textarea>
+        </div>
+
+        <script type="text/javascript" src="./eel.js"></script>
+        <script>
+            // 0. HTMLを読み込んだ際に実行する
+            window.onload = function(){
+                eel.make_instance()
+                }
+
+            // 1.CSVファイル読み込み
+            read_master.addEventListener('click', () =>{
+                eel.read_master(input_csv.value)
+            })
+
+            // 2. 「カートに追加」ボタンをクリックしたとき
+            add_cart.addEventListener('click', () => {
+                    eel.register_order(item_code.value, item_quantity.value)
+                })
+
+            // 3. 「注文を確定する」ボタンをクリックしたとき
+            confirm_order.addEventListener('click', () => {
+                eel.confirm_order()
+            })
+
+            // 4. 「決済」ボタンをクリックしたとき
+            settlement.addEventListener('click', () => {
+                eel.settlement(deposit_amount.value)
+            })
+
+            // 注文状況を表示
+            eel.expose(view_log_js)
+            function view_log_js(text){
+                order_field.value += text + "\n"
+            }
+
+            // 注文結果を表示
+            eel.expose(result_js)
+            function result_js(text){
+                result_field.value += text + "\n"
+            }
+
+            // 注文結果を表示
+            eel.expose(oturi_js)
+            function oturi_js(text){
+                oturi_field.value += text + "\n"
+            }
+
+
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+<!-- <h3>オーダー明細と合計金額の表示</h3>
+<div>
+    オーダー明細: <textarea readonly id="order" class="result_window" placeholder="注文済み商品が表示されます"></textarea><br>
+    合計金額: <textarea class="gokeikingaku"></textarea>
+</div>
+<h3>お預かり金額の入力</h3>
+<div>
+    お預かり金額<input id="receive" type="text"><br>
+    <button id="receive_button">OK</button>
+</div>
+<h3>お釣りの表示</h3>
+<div>
+    <textarea></textarea>
+</div> -->
