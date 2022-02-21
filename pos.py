@@ -86,7 +86,7 @@ class Order:
             # sales_sumamryがなければ作成
             if not os.path.exists(sales_summary_path):
                 with open(sales_summary_path, mode="w", encoding="utf-8_sig") as f:
-                    f.write("")
+                    f.write("item_code, item_quantity")
                     
             # sales_summaryに追記する
             df = pd.read_csv(sales_summary_path, encoding="utf-8_sig")

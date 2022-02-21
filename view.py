@@ -45,7 +45,6 @@ def read_master(input_csv):
     order = pos.Order(item_master)
     order.master_id_list()
 
-
 @ eel.expose
 def register_order(item_code, item_quantity):
     '''オーダーをhtmlから登録'''
