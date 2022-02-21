@@ -60,6 +60,8 @@ class Order:
             name, price = self.view_name_price(code)
             # テキストエリアに表示
             eel.result_js(f"[{name} ¥{price}] {quantity}個")
+            # コンソールに表示
+            print(f"[{name} ¥{price}] {quantity}個")
             # レシートに追記
             make_receipt(f"[{name} ¥{price}] {quantity}個")
             # 合計金額に加算
@@ -69,6 +71,8 @@ class Order:
             
         # テキストエリアに表示
         eel.result_js(f"[合計金額:{self.total_price}, 合計数量:{self.total_quantity}]")
+        # コンソールに表示
+        print(f"[合計金額:{self.total_price}, 合計数量:{self.total_quantity}]")
         # レシートに追記
         make_receipt(f"[合計金額:{self.total_price}, 合計数量:{self.total_quantity}]")
         
@@ -86,17 +90,12 @@ class Order:
             # sales_sumamryがなければ作成
             if not os.path.exists(sales_summary_path):
                 with open(sales_summary_path, mode="w", encoding="utf-8_sig") as f:
-                    f.write("item_code, item_quantity")
+                    f.write("item_code, item_quantity\n")
                     
             # sales_summaryに追記する
-            df = pd.read_csv(sales_summary_path, encoding="utf-8_sig")
             for item_code, item_quantity in zip(self.item_order_list, self.item_order_quantity_list):
-                df = df.append({
-                    "item_code": item_code,
-                    "item_quantity": item_quantity
-                }, ignore_index=True)
-        df.to_csv(sales_summary_path, encoding="utf-8_sig")
-            
+                with open(sales_summary_path, mode="a", encoding="utf-8_sig") as f:
+                    f.write(f"{item_code}, {item_quantity}\n")            
         
     def master_id_list(self):
         '''マスター（IDのみ）のリストを作成'''
