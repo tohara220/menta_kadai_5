@@ -44,12 +44,16 @@ def read_master(input_csv):
     # オーダークラスのインスタンス化
     order = pos.Order(item_master)
     order.master_id_list()
+    
 
 @ eel.expose
 def register_order(item_code, item_quantity):
     '''オーダーをhtmlから登録'''
-    master_id_list = order.master_id_list()
-    order.register_order(item_code, item_quantity, master_id_list)
+    try:
+        master_id_list = order.master_id_list()
+        order.register_order(item_code, item_quantity, master_id_list)
+    except:
+        eel.view_log_js(f"CSVファイルを読み込ませてください。")
     
 @ eel.expose
 def confirm_order():

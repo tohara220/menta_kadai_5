@@ -57,7 +57,11 @@ class Order:
         # 注文済み商品の商品番号と数量をループで回す
         for code, quantity in zip(item_order_list, item_order_quantity_list):
             # 商品番号より商品名と価格を呼び出す
-            name, price = self.view_name_price(code)
+            try:
+                name, price = self.view_name_price(code)
+            except:
+                print(f"商品が見つかりません. code={code}")
+                continue
             # テキストエリアに表示
             eel.result_js(f"[{name} ¥{price}] {quantity}個")
             # コンソールに表示
@@ -104,12 +108,12 @@ class Order:
         return self.item_master_code_list
                 
     def register_order(self, order_code, order_quantity, master_id_list):
+        print(master_id_list)
         # 商品コードを3桁ゼロ埋め
         order_code = str(order_code).zfill(3)
         ### 入力されたデータ形式を判定する
         if not order_code.isdecimal and order_quantity.isdecimal:
             print("商品番号と個数は数値で入力してください。")
-            
         # 入力された商品番号の存在確認
         elif order_code in master_id_list:
             # 商品番号と数量を登録
