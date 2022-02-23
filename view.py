@@ -17,8 +17,6 @@ app_name="html"
 end_point="index.html"
 size=(700,600)
 
-
-
 @ eel.expose
 def make_instance():
     '''マスタ登録
@@ -35,6 +33,7 @@ def make_instance():
     
 @ eel.expose
 def read_master(input_csv):
+    """CSVの登録ボタンをクリックで起動"""
     # グローバル変数の設定
     global order
     # レシートを格納するフォルダを作成

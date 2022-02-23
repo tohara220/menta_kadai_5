@@ -91,16 +91,30 @@ class Order:
             print(f"お釣りは{oturi}円です。\nありがとうございました。")
             # レシートに追記
             make_receipt(f"[お受け取り金額:{deposit_amount},お釣り:{oturi}]\n----------")
-            # sales_sumamryがなければ作成
-            if not os.path.exists(sales_summary_path):
-                with open(sales_summary_path, mode="w", encoding="utf-8_sig") as f:
-                    f.write("item_code, item_quantity\n")
+            
+            ### パターン1: with openを使う方法
+            # # sales_sumamryがなければ作成
+            # if not os.path.exists(sales_summary_path):
+            #     with open(sales_summary_path, mode="w", encoding="utf-8_sig") as f:
+            #         f.write("item_code, item_quantity\n")
+            # # sales_summaryに追記する
+            # for item_code, item_quantity in zip(self.item_order_list, self.item_order_quantity_list):
+            #     with open(sales_summary_path, mode="a", encoding="utf-8_sig") as f:
+            #         f.write(f"{item_code}, {item_quantity}\n") 
                     
+            ### パターン2: Pandasを使う方法
             # sales_summaryに追記する
+            #df = pd.read_csv(sales_summary_path, encoding="utf-8_sig")
+            df = pd.DataFrame()
             for item_code, item_quantity in zip(self.item_order_list, self.item_order_quantity_list):
-                with open(sales_summary_path, mode="a", encoding="utf-8_sig") as f:
-                    f.write(f"{item_code}, {item_quantity}\n")            
-        
+                df = df.append({
+                    "item_code": item_code,
+                    "item_quantity": item_quantity
+                }, ignore_index=True)
+            
+            enable_header = False if os.path.exists(sales_summary_path) else True
+            df.to_csv(sales_summary_path, mode="a", header=enable_header, encoding="utf-8_sig")
+            
     def master_id_list(self):
         '''マスター（IDのみ）のリストを作成'''
         for master_elm in self.item_master:
